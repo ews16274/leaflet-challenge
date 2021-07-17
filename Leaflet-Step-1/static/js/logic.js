@@ -1,3 +1,4 @@
+// Set up variable map view layers
 var graymap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
   tileSize: 512,
@@ -24,7 +25,7 @@ var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/
   id: "mapbox/outdoors-v11",
   accessToken: API_KEY
 });
-
+// Basic set up for map and map view window
 var map = L.map("mapid", {
   center: [
     40.7, -94.5
@@ -55,10 +56,10 @@ L
   .control
   .layers(baseMaps, overlay)
   .addTo(map);
-
+// Use d3 to bring in the json data for all earthquakes recorded this week
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
 
-
+// styling
   function styleInfo(feature) {
     return {
       opacity: 1,
@@ -70,7 +71,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
       weight: 0.5
     };
   }
-
+// assign separate colors for each circle based on magnitude of the earthquake
   function getColor(magnitude) {
     switch (true) {
     case magnitude > 5:
@@ -88,7 +89,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     }
   }
 
- 
+ // setting up radius of circle based on magnitude
   function getRadius(magnitude) {
     if (magnitude === 0) {
       return 1;
@@ -96,7 +97,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
     return magnitude * 4;
   }
-
+// setting up pop up window with info which appears upon click
   L.geoJson(data, {
     pointToLayer: function(feature, latlng) {
       return L.circleMarker(latlng);
@@ -113,7 +114,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   var legend = L.control({
     position: "bottomright"
   });
-
+// adding legend
   legend.onAdd = function() {
     var div = L
       .DomUtil
